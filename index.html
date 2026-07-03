@@ -127,13 +127,12 @@
     <p class="tagline">Everything around the ride. A road cycling brand from Stockholm.</p>
 
     <form id="signup" novalidate>
-      <!-- To wire real capture: set action to your Brevo form URL and method="POST",
-           or replace the JS handler with a Brevo/Formspree endpoint. -->
+      <!-- Wired to Brevo (double opt-in). Signups land in the "Kring" list. -->
       <label for="email" class="hidden">Email</label>
-      <input id="email" type="email" name="email" placeholder="your@email.com" required autocomplete="email" />
+      <input id="email" type="email" name="EMAIL" placeholder="your@email.com" required autocomplete="email" />
       <button type="submit">Join the ride</button>
     </form>
-    <p id="thanks" class="thanks hidden">On the list. Vi ses där ute. 🚲</p>
+    <p id="thanks" class="thanks hidden">Check your inbox to confirm — vi ses där ute. 🚲</p>
     <p class="sub">Coming soon</p>
   </main>
 
@@ -143,15 +142,23 @@
   </footer>
 
   <script>
-    // Placeholder submit — swap for a real Brevo/Formspree endpoint before launch.
-    const form = document.getElementById('signup');
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      const email = document.getElementById('email').value.trim();
-      if (!email || !email.includes('@')) return;
+    // Signups POST to Brevo (double opt-in). Contacts land in the "Kring" list.
+    var BREVO_ACTION = "https://28472410.sibforms.com/serve/MUIFAImXusrvh7F_rHu5YPY9sOWyGoU5r_3F0qYdkPWBvIXxJHwj5J64vs5HBZ0mvKagjb9fL3lwUKJJtRe7DudG2d-g-E29Ci1Bb5brw9TIW6MyxrzAXgd0bHnc2wApCpb132TiyuOU2Pj_JP7QAIWqtpgY1L27G1IOmQqp3b5GLGYmH_VMZFyEv47bt2lk0k-M6StKLMG88xUijQ==";
+    var form = document.getElementById('signup');
+    function reveal() {
       form.classList.add('hidden');
       document.getElementById('thanks').classList.remove('hidden');
-      // TODO: POST `email` to Brevo list here.
+    }
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var email = document.getElementById('email').value.trim();
+      if (!email || email.indexOf('@') === -1) return;
+      var data = new FormData();
+      data.append('EMAIL', email);
+      data.append('email_address_check', '');
+      data.append('locale', 'en');
+      fetch(BREVO_ACTION, { method: 'POST', body: data, mode: 'no-cors' })
+        .then(reveal).catch(reveal);
     });
   </script>
 </body>
