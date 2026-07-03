@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KRING — Everything around the ride</title>
+  <meta name="description" content="Kring — Stockholm road cycling. Everything around the ride. Coming soon." />
+
+  <!-- Social preview -->
+  <meta property="og:title" content="KRING" />
+  <meta property="og:description" content="Everything around the ride. Stockholm road cycling — coming soon." />
+  <meta property="og:type" content="website" />
+
+  <!-- Display font: Space Grotesk = the "tight grotesk / 01" direction (free) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* --- tokens (from Kring-Brand/tokens.json) --- */
+    :root {
+      --ink:  #141210;
+      --bone: #F3F1EA;
+      --stone:#8A857A;
+      --line: #D8D2C4;
+      --font-display: "Space Grotesk", system-ui, sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      background: var(--bone);
+      color: var(--ink);
+      font-family: var(--font-display);
+      display: flex;
+      flex-direction: column;
+      min-height: 100dvh;
+      -webkit-font-smoothing: antialiased;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* subtle film grain overlay */
+    .grain {
+      position: fixed; inset: 0; pointer-events: none; z-index: 5;
+      opacity: 0.05; mix-blend-mode: multiply;
+    }
+
+    main {
+      flex: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 2rem 1.5rem;
+      gap: 1.75rem;
+    }
+
+    .wordmark {
+      font-weight: 500;
+      letter-spacing: -0.04em;
+      font-size: clamp(3.5rem, 16vw, 9rem);
+      line-height: 0.9;
+    }
+    /* wordmark: all letters uniform weight */
+
+    .tagline {
+      font-weight: 400;
+      font-size: clamp(0.95rem, 2.4vw, 1.15rem);
+      letter-spacing: 0.02em;
+      max-width: 32ch;
+      color: var(--ink);
+    }
+    .sub {
+      font-size: 0.8rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--stone);
+    }
+
+    form {
+      display: flex; gap: 0.5rem; width: 100%; max-width: 420px;
+      margin-top: 0.5rem;
+    }
+    input[type="email"] {
+      flex: 1; background: transparent;
+      border: 1px solid var(--line);
+      color: var(--ink);
+      padding: 0.85rem 1rem; font-size: 1rem;
+      font-family: var(--font-display);
+      outline: none;
+    }
+    input[type="email"]:focus { border-color: var(--ink); }
+    button {
+      background: var(--ink); color: var(--bone);
+      border: 1px solid var(--ink);
+      padding: 0.85rem 1.4rem; font-size: 0.95rem;
+      font-family: var(--font-display); font-weight: 500;
+      letter-spacing: 0.02em; cursor: pointer;
+      transition: opacity 0.15s ease;
+    }
+    button:hover { opacity: 0.85; }
+
+    .thanks { font-size: 1rem; color: var(--ink); min-height: 1.2rem; }
+    .hidden { display: none; }
+
+    footer {
+      display: flex; justify-content: space-between;
+      padding: 1.25rem 1.5rem;
+      font-size: 0.75rem; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--stone);
+    }
+    footer a { color: var(--stone); text-decoration: none; }
+    @media (max-width: 480px) {
+      form { flex-direction: column; }
+      footer { flex-direction: column; gap: 0.4rem; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+  <!-- film grain -->
+  <svg class="grain" xmlns="http://www.w3.org/2000/svg">
+    <filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/></filter>
+    <rect width="100%" height="100%" filter="url(#noise)"/>
+  </svg>
+
+  <main>
+    <h1 class="wordmark">KRING</h1>
+    <p class="tagline">Everything around the ride. A road cycling brand from Stockholm.</p>
+
+    <form id="signup" novalidate>
+      <!-- To wire real capture: set action to your Brevo form URL and method="POST",
+           or replace the JS handler with a Brevo/Formspree endpoint. -->
+      <label for="email" class="hidden">Email</label>
+      <input id="email" type="email" name="email" placeholder="your@email.com" required autocomplete="email" />
+      <button type="submit">Join the ride</button>
+    </form>
+    <p id="thanks" class="thanks hidden">On the list. Vi ses där ute. 🚲</p>
+    <p class="sub">Coming soon</p>
+  </main>
+
+  <footer>
+    <span>KRING · Stockholm</span>
+    <a href="https://instagram.com/kringcycling">@kringcycling</a>
+  </footer>
+
+  <script>
+    // Placeholder submit — swap for a real Brevo/Formspree endpoint before launch.
+    const form = document.getElementById('signup');
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      if (!email || !email.includes('@')) return;
+      form.classList.add('hidden');
+      document.getElementById('thanks').classList.remove('hidden');
+      // TODO: POST `email` to Brevo list here.
+    });
+  </script>
+</body>
+</html>
